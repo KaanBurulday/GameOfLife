@@ -56,7 +56,7 @@ public class GameGUI extends JFrame {
 
     private void startGame() {
         new Thread(() -> {
-            int maxGeneration = 10_000;
+            int maxGeneration = game.maxGeneration == 0 ? 10_000 : game.maxGeneration;
             int iteration = 0;
             while (iteration < maxGeneration && game.population != 0) {
                 game.next(); // Update the game state
@@ -70,6 +70,9 @@ public class GameGUI extends JFrame {
                     Thread.sleep(game.milliseconds); // Adjust speed as needed
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+                if (game.population == 0) {
+                    break;
                 }
             }
         }).start();
@@ -122,9 +125,9 @@ public class GameGUI extends JFrame {
             }
 
             int x = 5, y = 0;
-            for (int i = 0; i < rowCount; i++) {
-                for (int j = 0; j < columnCount; j++) {
-                    if (board[i][j].getState() == CellState.LIVE)
+            for (int i = 0; i < columnCount; i++) {
+                for (int j = 0; j < rowCount; j++) {
+                    if (board[j][i].getState() == CellState.LIVE)
                         g2d.fillRect(x, y, cellSize, cellSize);
                     else
                         g2d.drawRect(x, y, cellSize, cellSize);
